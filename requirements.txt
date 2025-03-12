@@ -1,0 +1,11 @@
+streamlit
+streamlit-drawable-canvas
+numpy
+matplotlib
+deep-translator
+geopy
+scikit-learn
+opencv-python-headless
+transformers
+streamlit_folium
+polyline
