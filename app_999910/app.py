@@ -147,7 +147,8 @@ def main():
 
                 st.subheader("検出結果動画")
                 with open(output_path, 'rb') as f:
-                    st.video(f.read())
+                    video_bytes = f.read()
+                    st.video(video_bytes, format="video/mp4")
 
                 if show_graph and count_df is not None:
                     st.subheader("フレームごとの人数推移")
