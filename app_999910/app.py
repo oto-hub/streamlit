@@ -75,7 +75,7 @@ def process_video_count(uploaded_file, model, conf):
     return output_path, df[['sec', 'count']]
 
 def main():
-    st.set_page_config(layout="centered")
+    # st.set_page_config(layout="centered")
     st.title("物体検出アプリ（YOLOv8）")
 
     app_mode = st.sidebar.radio("モード選択", ["画像で検出", "動画で検出", "人数カウント"])
