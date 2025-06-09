@@ -1,0 +1,37 @@
+import streamlit as st
+import random
+
+def janken():
+    hands = ["グー", "チョキ", "パー"]
+    computer_hand = random.choice(hands)
+    return computer_hand
+
+def judge(player_hand, computer_hand):
+    if player_hand == computer_hand:
+        return "あいこです。"
+    elif (player_hand == "グー" and computer_hand == "チョキ") or \
+         (player_hand == "チョキ" and computer_hand == "パー") or \
+         (player_hand == "パー" and computer_hand == "グー"):
+        return "あなたの勝ちです！"
+    else:
+        return "コンピュータの勝ちです。"
+
+def main():
+    st.title("じゃんけんゲーム")
+    st.write("じゃんけんをしましょう！")
+
+    player_hand = st.radio(
+        "出す手を選んでください:",
+        ("グー", "チョキ", "パー")
+    )
+
+    if st.button("勝負！"):
+        computer_hand = janken()
+        result = judge(player_hand, computer_hand)
+
+        st.write(f"あなたは{player_hand}を出しました。")
+        st.write(f"コンピュータは{computer_hand}を出しました。")
+        st.write(result)
+
+if __name__ == "__main__":
+    main()
