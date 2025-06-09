@@ -103,7 +103,9 @@ def main():
         if uploaded_video:
             output_path = process_video(uploaded_video, model, conf, person_only)
             st.success("動画の検出が完了しました。")
-            st.video(output_path)
+            # ✅ 確実に表示できる方法に変更
+            with open(output_path, 'rb') as f:
+                st.video(f.read())
 
     elif app_mode == "人数カウント":
         st.info("アップロードされた動画からフレームごとの人数をカウントし、グラフ化します")
@@ -113,7 +115,9 @@ def main():
         if uploaded_video:
             output_path, count_df = process_video_count(uploaded_video, model, conf)
             st.success("人数カウントが完了しました。")
-            st.video(output_path)
+            # ✅ 同じくバイナリで表示
+            with open(output_path, 'rb') as f:
+                st.video(f.read())
             if show_graph:
                 st.line_chart(count_df.set_index("sec"))
                 st.dataframe(count_df)
