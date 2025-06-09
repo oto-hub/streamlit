@@ -34,9 +34,6 @@ def process_video(uploaded_file, model, conf, person_only):
 
     cap.release()
     writer.release() 
-    with open(output_path, 'rb') as f:
-        video_bytes = f.read()
-        st.video(video_bytes)
 
     return output_path
 
