@@ -50,3 +50,6 @@ def main():
             st.pyplot(fig)
         else:
             st.warning("人物が検出されませんでした。")
+
+if __name__ == "__main__":
+    main()
