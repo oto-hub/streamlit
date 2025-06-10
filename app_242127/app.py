@@ -48,7 +48,7 @@ def main():
     if st.session_state.model_generated:
         # 画像を一度だけ表示
         if st.session_state.show_image:
-            st.image("app_999999/aiimage.png", width=300, caption="あんまり当てられないから期待しないでね・・・")
+            st.image("app_242127/aiimage.png", width=300, caption="あんまり当てられないから期待しないでね・・・")
             # st.session_state.show_image = True  # 再表示を防ぐフラグ
 
         # キャンバスを表示
