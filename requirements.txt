@@ -1,0 +1,17 @@
+streamlit
+streamlit-drawable-canvas
+numpy
+pillow
+matplotlib
+deep-translator
+geopy
+scikit-learn
+transformers
+streamlit_folium
+polyline
+ultralytics
+spacy
+ginza
+ja-ginza
+opencv-python-headless
+# mediapipe
