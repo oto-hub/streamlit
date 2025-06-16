@@ -14,4 +14,4 @@ spacy
 ginza
 ja-ginza
 opencv-python-headless
-# mediapipe
+mediapipe
