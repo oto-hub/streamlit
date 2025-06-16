@@ -104,3 +104,6 @@ if uploaded_img is not None:
                        data=BufferedReader_img,
                        file_name="output.png",
                        mime="image/png")
+
+if __name__ == "__main__":
+    main()
