@@ -14,7 +14,7 @@ def main():
     
     st.write("コンピュータが1～100の数字を1つ決めました。")
     
-    your_ans = st.number_input("当ててみてください：", min_value=1, max_value=100, step=1)
+    your_ans = st.number_input("当ててみてください：", min_value=1, max_value=100, value=50, step=1)
     
     if st.button("判定"):
         if not st.session_state.game_over:
