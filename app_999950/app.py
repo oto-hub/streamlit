@@ -1,118 +1,91 @@
 import streamlit as st
 import torch
-from transformers import BertForMaskedLM
-from transformers import BertTokenizer
+from transformers import BertForMaskedLM, BertTokenizer
+
+# 日本語モデルに統一
+TOKENIZER_NAME = "tohoku-nlp/bert-base-japanese"
+MODEL_NAME = "tohoku-nlp/bert-base-japanese"
 
 def predict_masked_word(input_text, mask_position):
     """
-    BERTを使用してマスクされた単語を予測する関数
-    
+    BERTを使用してマスクされた単語を予測する関数（日本語対応）
     Args:
         input_text (str): 予測したい文章
         mask_position (int): マスクする単語の位置（0から開始）
-    
     Returns:
         list: 予測された上位5つの単語
     """
     app_text1 = '[CLS]'
     app_text2 = '[SEP]'
     
-    # 文章をトークン化
-    tokenizer = BertTokenizer.from_pretrained("bert-base-uncased")
+    tokenizer = BertTokenizer.from_pretrained(TOKENIZER_NAME)
     words = tokenizer.tokenize(input_text)
     
-    # 指定された位置に[MASK]を挿入
     if 0 <= mask_position < len(words):
         words[mask_position] = '[MASK]'
     else:
         return ["指定された位置が無効です"]
     
     text = app_text1 + ' ' + ' '.join(words) + ' ' + app_text2
-    
-    tokenizer = BertTokenizer.from_pretrained("bert-base-uncased") # uncasedは大文字と小文字を区別しないという意味
     words = tokenizer.tokenize(text)
-    print(words)
+    word_ids = tokenizer.convert_tokens_to_ids(words)
+    word_tensor = torch.tensor([word_ids])
 
-    word_ids = tokenizer.convert_tokens_to_ids(words)  # 単語をインデックスに変換
-    word_tensor = torch.tensor([word_ids])  # テンソルに変換
-    print(word_tensor)
-
-    msk_model = BertForMaskedLM.from_pretrained("bert-base-uncased")
+    msk_model = BertForMaskedLM.from_pretrained(MODEL_NAME)
     msk_model.eval()
 
     x = word_tensor
-    y = msk_model(x)  # 予測
+    y = msk_model(x)
     result = y[0]
-    print(result.size())  # 結果の形状
 
-    # [MASK]トークンの位置を探す
     msk_idx = None
     for i, word in enumerate(words):
         if word == '[MASK]':
             msk_idx = i
             break
-    
     if msk_idx is None:
         return ["[MASK]トークンが見つかりませんでした"]
-    
-    _, max_ids = torch.topk(result[0][msk_idx], k=5)  # 最も大きい5つの値
-    result_words = tokenizer.convert_ids_to_tokens(max_ids.tolist())  # インデックスを単語に変換
-    print(result_words)
-    
+    _, max_ids = torch.topk(result[0][msk_idx], k=5)
+    result_words = tokenizer.convert_ids_to_tokens(max_ids.tolist())
     return result_words
 
 def predict_masked_word_manual(input_text):
     """
-    手動で[MASK]を含む文章から予測する関数
-    
+    手動で[MASK]を含む文章から予測する関数（日本語対応）
     Args:
         input_text (str): [MASK]トークンを含む文章
-    
     Returns:
         list: 予測された上位5つの単語
     """
     app_text1 = '[CLS]'
     app_text2 = '[SEP]'
     text = app_text1 + input_text + app_text2
-    
-    tokenizer = BertTokenizer.from_pretrained("bert-base-uncased")
+    tokenizer = BertTokenizer.from_pretrained(TOKENIZER_NAME)
     words = tokenizer.tokenize(text)
-    print(words)
-
     word_ids = tokenizer.convert_tokens_to_ids(words)
     word_tensor = torch.tensor([word_ids])
-    print(word_tensor)
-
-    msk_model = BertForMaskedLM.from_pretrained("bert-base-uncased")
+    msk_model = BertForMaskedLM.from_pretrained(MODEL_NAME)
     msk_model.eval()
-
     x = word_tensor
     y = msk_model(x)
     result = y[0]
-    print(result.size())
-
-    # [MASK]トークンの位置を探す
     msk_idx = None
     for i, word in enumerate(words):
         if word == '[MASK]':
             msk_idx = i
             break
-    
     if msk_idx is None:
         return ["[MASK]トークンが見つかりませんでした"]
-    
     _, max_ids = torch.topk(result[0][msk_idx], k=5)
     result_words = tokenizer.convert_ids_to_tokens(max_ids.tolist())
-    print(result_words)
-    
     return result_words
 
 def main():
     """Streamlitアプリのメイン関数"""
-    st.title("BERT マスク言語モデル予測")
+    st.title("BERT マスク言語モデル予測（日本語対応）")
     
     input_text = st.text_input('BERTに予測させたい文章を入力してください＞', 
-                              placeholder="例: I love baseball")
+                              placeholder="例: 私は野球が好きです")
     
     # マスク方法を選択
     mask_method = st.radio(
@@ -124,7 +97,7 @@ def main():
     if mask_method == "ドロップダウンで選択":
         if input_text.strip():
             # トークン化してドロップダウンで選択
-            tokenizer = BertTokenizer.from_pretrained("bert-base-uncased")
+            tokenizer = BertTokenizer.from_pretrained(TOKENIZER_NAME)
             words = tokenizer.tokenize(input_text)
             
             if words:
@@ -166,7 +139,7 @@ def main():
         if st.button('予測実行'):
             if input_text.strip():
                 # トークン化して単語数を表示
-                tokenizer = BertTokenizer.from_pretrained("bert-base-uncased")
+                tokenizer = BertTokenizer.from_pretrained(TOKENIZER_NAME)
                 words = tokenizer.tokenize(input_text)
                 st.write(f"**トークン化結果:** {words}")
                 st.write(f"**単語数:** {len(words)}")
