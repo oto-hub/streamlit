@@ -16,3 +16,5 @@ torchvision>=0.15.0
 pandas
 spacy
 ja_ginza
+en_core_web_sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.7.0/en_core_web_sm-3.7.0-py3-none-any.whl
+transformers==4.51.0
