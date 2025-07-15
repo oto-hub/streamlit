@@ -1,0 +1,19 @@
+streamlit>=1.28.0
+streamlit-drawable-canvas
+numpy>=1.24.0
+pillow>=10.0.0
+matplotlib
+deep-translator
+geopy
+scikit-learn
+streamlit_folium
+polyline
+ultralytics
+opencv-python-headless>=4.8.0
+torch>=2.0.0
+torchvision>=0.15.0
+pandas
+spacy
+ja_ginza
+en_core_web_sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.7.0/en_core_web_sm-3.7.0-py3-none-any.whl
+transformers>=4.51.0
