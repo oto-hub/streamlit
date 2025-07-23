@@ -1,7 +1,6 @@
-streamlit>=1.28.0
-streamlit-drawable-canvas
-numpy>=1.24.0
-pillow>=10.0.0
+streamlit
+numpy
+pillow
 matplotlib
 deep-translator
 geopy
@@ -9,9 +8,7 @@ scikit-learn
 streamlit_folium
 polyline
 ultralytics
-opencv-python-headless>=4.8.0
-torch>=2.0.0
-torchvision>=0.15.0
+opencv-python-headless
+torch
+torchvision
 pandas
-spacy
-transformers>=4.51.0
