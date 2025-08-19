@@ -2,9 +2,6 @@ import streamlit as st
 import importlib
 import os
 
-os.system("python -m spacy download ja_ginza")
-os.system("python -m spacy download en_core_web_sm")
-
 st.set_page_config(
     page_title='streamlitアプリ研究所', 
     page_icon='Bitちゃん02.png',
@@ -27,7 +24,7 @@ def main():
     
     page = st.sidebar.selectbox(
         '🚀 Webアプリ番号一覧',
-        student_apps,
+        student_apps
     )
 
     if page:

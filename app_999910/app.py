@@ -3,16 +3,40 @@ import cv2
 import tempfile
 import numpy as np
 import pandas as pd
-from ultralytics import YOLO
 import os
 
+# YOLOライブラリの利用可能性をチェック
+try:
+    from ultralytics import YOLO
+    YOLO_AVAILABLE = True
+except ImportError:
+    YOLO_AVAILABLE = False
+    st.warning("⚠️ YOLOライブラリが利用できません。Streamlit Cloudの制限により、一部機能が制限されます。")
+
+def process_image_simple(img_bytes):
+    """シンプルな画像処理（YOLOなし）"""
+    img = cv2.imdecode(np.frombuffer(img_bytes, np.uint8), cv2.IMREAD_COLOR)
+    # グレースケール変換
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    # エッジ検出
+    edges = cv2.Canny(gray, 100, 200)
+    # 色空間変換
+    return cv2.cvtColor(edges, cv2.COLOR_GRAY2RGB)
+
 def process_image(img_bytes, model, conf, person_only):
+    if not YOLO_AVAILABLE:
+        return process_image_simple(img_bytes)
+    
     img = cv2.imdecode(np.frombuffer(img_bytes, np.uint8), cv2.IMREAD_COLOR)
     results = model(img, conf=conf, classes=[0] if person_only else None)
     output_img = results[0].plot(labels=True, conf=True)
     return cv2.cvtColor(output_img, cv2.COLOR_BGR2RGB)
 
 def process_video(uploaded_file, model, conf, person_only):
+    if not YOLO_AVAILABLE:
+        st.error("YOLOライブラリが利用できません。動画処理は利用できません。")
+        return None
+    
     temp_input_file = tempfile.NamedTemporaryFile(delete=False, suffix=".mp4")
     try:
         temp_input_file.write(uploaded_file.read())
@@ -46,6 +70,10 @@ def process_video(uploaded_file, model, conf, person_only):
     return output_path
 
 def process_video_count(uploaded_file, model, conf):
+    if not YOLO_AVAILABLE:
+        st.error("YOLOライブラリが利用できません。動画処理は利用できません。")
+        return None, None
+    
     temp_input_file = tempfile.NamedTemporaryFile(delete=False, suffix=".mp4")
     try:
         temp_input_file.write(uploaded_file.read())
@@ -92,6 +120,28 @@ def process_video_count(uploaded_file, model, conf):
 
 def main():
     st.title("物体検出アプリ（YOLOv8）")
+
+    if not YOLO_AVAILABLE:
+        st.info("🔧 軽量モード: YOLOライブラリが利用できないため、基本的な画像処理機能のみ利用可能です。")
+        st.markdown("---")
+        
+        st.header("🖼️ 画像処理")
+        uploaded_img = st.file_uploader("画像ファイル", type=["jpg", "png", "jpeg"])
+        
+        if uploaded_img:
+            st.subheader("入力画像")
+            st.image(uploaded_img, caption="元の画像", use_container_width=True)
+            
+            with st.spinner("画像を処理中..."):
+                result_img = process_image_simple(uploaded_img.getvalue())
+            
+            st.subheader("処理結果（エッジ検出）")
+            st.image(result_img, caption="エッジ検出結果", use_container_width=True)
+        
+        st.markdown("---")
+        st.sidebar.markdown("---")
+        st.sidebar.markdown("軽量版画像処理アプリケーション")
+        return
 
     st.sidebar.header("設定")
     app_mode = st.sidebar.radio("モード選択", ["画像で検出", "動画で検出"])
