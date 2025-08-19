@@ -48,7 +48,10 @@ def main():
     if st.session_state.model_generated:
         # 画像を一度だけ表示
         if st.session_state.show_image:
-            st.image("app_242127/aiimage.png", width=300, caption="あんまり当てられないから期待しないでね・・・")
+            try:
+                st.image("aiimage.png", width=300, caption="あんまり当てられないから期待しないでね・・・")
+            except:
+                st.info("AI画像の読み込みに失敗しましたが、アプリは正常に動作します。")
             # st.session_state.show_image = True  # 再表示を防ぐフラグ
 
         # キャンバスを表示
