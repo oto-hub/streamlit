@@ -1,0 +1,14 @@
+streamlit
+numpy
+pillow
+matplotlib
+deep-translator
+geopy
+scikit-learn
+streamlit_folium
+polyline
+ultralytics
+opencv-python-headless
+torch
+torchvision
+pandas
